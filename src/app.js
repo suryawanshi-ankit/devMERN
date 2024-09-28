@@ -43,6 +43,32 @@ app.get('/feed', async (req, res) => {
 
 })
 
+app.delete('/user', async (req, res) => {
+    const userId = req.body._id;
+    try {
+        await User.findByIdAndDelete(userId);
+        res.send('User deleted successfully !!!');
+    } catch (err) {
+        res.status(400).send("Error saving the user: ", err.message)
+    }
+
+})
+
+app.patch('/user', async (req, res) => {
+    // creating new instance of the user model
+    const userId = req.body._id;
+    const userData = req.body
+    console.log(userId, userData)
+    try {
+        const user = await User.findByIdAndUpdate(userId, userData);
+        console.log('user', user);
+        res.send("User updated successfully !!!");
+    } catch (err) {
+        res.status(400).send(`Error Updating the user: ${err.message}`);
+    }
+
+})
+
 
 connectDB()
     .then(() => {
