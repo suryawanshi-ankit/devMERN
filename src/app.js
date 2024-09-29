@@ -9,6 +9,9 @@ app.use(express.json());
 app.post('/signup', async (req, res) => {
     // creating new instance of the user model
     const userData = new User(req.body);
+    
+    if (userData?.skills?.length > 10) throw new Error("Allowed skills is 10");
+
     try {
         await userData.save();
         res.send("User created successfully !!!");
@@ -54,14 +57,21 @@ app.delete('/user', async (req, res) => {
 
 })
 
-app.patch('/user', async (req, res) => {
+app.patch('/user/:userId', async (req, res) => {
     // creating new instance of the user model
-    const userId = req.body._id;
+    const userId = req.params?.userId;
     const userData = req.body
     console.log(userId, userData)
     try {
+        const ALLOWED_UPDATES = ['photoUrl', 'about', 'gender', 'age', 'skills'];
+
+        const isUpdateAllowed = Object.keys(userData).every(k => ALLOWED_UPDATES.includes(k));
+
+        if (!isUpdateAllowed) throw new Error("Update not allowed");
+        if (userData?.skills?.length > 10) throw new Error("Allowed skills is 10");
+
+
         const user = await User.findByIdAndUpdate(userId, userData);
-        console.log('user', user);
         res.send("User updated successfully !!!");
     } catch (err) {
         res.status(400).send(`Error Updating the user: ${err.message}`);
