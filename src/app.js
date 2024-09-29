@@ -61,7 +61,6 @@ app.patch('/user/:userId', async (req, res) => {
     // creating new instance of the user model
     const userId = req.params?.userId;
     const userData = req.body
-    console.log(userId, userData)
     try {
         const ALLOWED_UPDATES = ['photoUrl', 'about', 'gender', 'age', 'skills'];
 
@@ -71,7 +70,10 @@ app.patch('/user/:userId', async (req, res) => {
         if (userData?.skills?.length > 10) throw new Error("Allowed skills is 10");
 
 
-        const user = await User.findByIdAndUpdate(userId, userData);
+        const user = await User.findByIdAndUpdate(userId, userData, {
+            returnDocument: "after",
+            runValidators: true,
+        });
         res.send("User updated successfully !!!");
     } catch (err) {
         res.status(400).send(`Error Updating the user: ${err.message}`);
