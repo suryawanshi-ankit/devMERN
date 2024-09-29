@@ -13,7 +13,7 @@ app.post('/signup', async (req, res) => {
         await userData.save();
         res.send("User created successfully !!!");
     } catch (err) {
-        res.status(400).send("Error saving the user: ", err.message)
+        res.status(400).send(`Error saving the user: ${err.message}`)
     }
 
 })
@@ -38,7 +38,7 @@ app.get('/feed', async (req, res) => {
         const data = await User.find({});
         res.send(data);
     } catch (err) {
-        res.status(400).send("Error saving the user: ", err.message)
+        res.status(400).send(`Error saving the user: ${err.message}`);
     }
 
 })
