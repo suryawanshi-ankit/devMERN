@@ -16,7 +16,13 @@ const validateLoginData = (req) => {
         throw new Error("Invalid credentials !!!");
 }
 
+const validateEditProfile = (req) => {
+    const fieldAllowedToUpdate = ['firstName', 'lastName', 'age', 'gender', 'photoUrl', 'about', 'skills'];
+    return Object.keys(req.body)?.every(key => fieldAllowedToUpdate.includes(key));
+}
+
 module.exports = {
     validateSignupData,
-    validateLoginData
+    validateLoginData,
+    validateEditProfile,
 }
